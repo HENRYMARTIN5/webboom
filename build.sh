@@ -4,7 +4,7 @@ working_dir=$(dirname $0)
 
 # CHANGEME! #########
 WAD_PATH="$1"
-BUILD_FOR="Debug" # or "Release"
+BUILD_FOR="Release" # or "Debug"
 #####################
 
 # Set SDL2 paths explicitly
@@ -29,10 +29,7 @@ pushd prboom2 || exit 1
         -D WITH_NET=0        \
         -D PRBOOM_WAD="$tmpdir/prboom-plus.wad"               \
         -D PRELOAD_IWAD="../$WAD_PATH"                        \
-        -D PRELOAD_CONFIG="../prboom-plus.cfg"                \
-        -D CMAKE_BUILD_TYPE="$BUILD_FOR"                      \
-        -DSDL2_LIBRARY="${SDL2_LIBS}"                         \
-        -DSDL2_INCLUDE_DIR="${SDL2_CFLAGS}"
+        -D CMAKE_BUILD_TYPE="$BUILD_FOR"
     emmake cmake --build .
 popd || exit 1
 

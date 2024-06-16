@@ -20,79 +20,19 @@ This project uses Emscripten as its compiler toolchain. To install it, follow [t
 
 [CMake](https://cmake.org/download/) is needed to generate and run the build scripts, so go ahead and install that too.
 
-### Bulding `prboom-plus.wad` and prboom-plus for PC
+### Bulding for WebAssembly
 
-To run prboom-plus (on desktop or web), you'll first need the `prboom-plus.wad` [PWAD](https://doomwiki.org/wiki/PWAD). It can be built off the `prboom2/data` directory on this repository using the CMake commands to compile a desktop build:
-
-```sh
-cd prboom2
-cmake . # Generate the build scripts
-cmake --build . # Build prboom-plus.wad, client executable and server executable
-```
-
-After this, the executable can found in `prboom2/` along `prboom-plus.wad`. To run it, use:
+A build script is provided to simplify the process. To compile the project, run the following command:
 
 ```sh
-./prboom-plus
+./build.sh
 ```
 
-### Cleaning desktop build files
-
-Copy the `prboom-plus.wad` above the repository root and then clean it using:
+This will generate the neccesary files in the `prboom2` directory. To serve the website, you can use the following command:
 
 ```sh
-mkdir $HOME/prboom-data # Create a directory if you want
-cp prboom-plus.wad $HOME/prboom-data # Copy the .wad there
-git clean -xdf # WARNING: This will remove any untracked files added to the repository
+./serve.sh
 ```
-
-### Compiling with Emscripten
-
-After cleaning the repository, it's time to recreate the build files for WebAssembly. If there is an Emscripten version activated through `emsdk` and the env file was sourced, `emcc`, `emcmake` and `emmake` should be available in `$PATH`. If that's the case, proceed with:
-
-```sh
-cd prboom2
-emcmake cmake . \
-  -D BUILD_GL=0 \
-  -D WITH_DUMB=0 \
-  -D WITH_MAD=0 \
-  -D WITH_FLUIDSYNTH=0 \
-  -D WITH_VORBISFILE=0 \
-  -D WITH_PORTMIDI=0 \
-  -D WITH_ALSA=0 \
-  -D WITH_PCRE=0 \
-  -D WITH_NET=0 \
-  -D PRBOOM_WAD="$HOME/prboom-data/prboom-plus.wad" # Or the path pointing to where the prboom-plus.wad is 
-  -D PRELOAD_IWAD="$HOME/prboom-data/doom1.wad" # Or some other IWAD that is recognized by prboom 
-  -D PRELOAD_CONFIG="$HOME/prboom-data/prboom-plus.cfg" # Optional. A path to a prboom-plus valid config
-  -D CMAKE_BUILD_TYPE="Debug" # Or Release 
-
-emmake cmake --build .
-```
-
-This will generate the following files: `index.html`, `index.js`, `index.wasm`, `index.wasm.map`, and `index.data`.
-
-If you run `python -m "http.server"` or any web server in that directory, you should be able to play Doom on your browser!
-
-#### Other notable CMake variables
-
-``` sh
--D OUT_SUFFIX=".html" # emcc output format. Check "-o <target>" in the emmc reference
--D OUT_NAME="index" # Output name
--D EM_KEYBOARD_ELEMENT="\"doom\"" # DOM ID for the element that will capture mouse and keyboard events  
--D ADDITIONAL_FLAGS=""  #  Any flag accepted by emcc in the linking stage
-```
-
-For instance, these are the `ADDITIONAL_FLAGS` used in the [hosted](https://webboom.surge.sh) version:
-
-```
- -D ADDITIONAL_FLAGS="-s MODULARIZE=1 -s EXPORT_NAME=prboom --shell-file='../emscripten/shell.html' -s INVOKE_RUN=0"
-```
-
-See also:
-
-- [emcc reference](https://emscripten.org/docs/tools_reference/emcc.html)
-- [settings.js](https://emscripten.org/docs/api_reference/advanced-apis.html#settings-js)
 
 #### Differences between release and debug builds
 
