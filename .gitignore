@@ -4,6 +4,7 @@ Makefile
 cmake_install.cmake
 
 /build*
+!build.sh
 /dependencies*
 /prboom2/ICONS/icons.aps
 /prboom2/ImportExecutables.cmake
@@ -21,3 +22,5 @@ cmake_install.cmake
 /prboom2/*.wasm
 /prboom2/*.wasm.map
 /prboom2/*.data
+
+*.WAD
