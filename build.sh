@@ -3,15 +3,19 @@ git clean -xdf
 working_dir=$(dirname $0)
 
 # CHANGEME! #########
-WAD_PATH="$working_dir/DOOM.WAD"
+WAD_PATH="$1"
+BUILD_FOR="Debug" # or "Release"
 #####################
+
+# Set SDL2 paths explicitly
+SDL2_LIBS=$(sdl2-config --libs)
+SDL2_CFLAGS=$(sdl2-config --cflags)
 
 pushd prboom2 || exit 1
     cmake .
     cmake --build .
     tmpdir=$(mktemp -d)
     cp prboom-plus.wad $tmpdir/prboom-plus.wad
-    cp prboom-plus.cfg $tmpdir/prboom-plus.cfg
     git clean -xdf
     emcmake cmake .          \
         -D BUILD_GL=0        \
@@ -24,8 +28,12 @@ pushd prboom2 || exit 1
         -D WITH_PCRE=0       \
         -D WITH_NET=0        \
         -D PRBOOM_WAD="$tmpdir/prboom-plus.wad"               \
-        -D PRELOAD_IWAD="$working_dir/DOOM.WAD"               \
+        -D PRELOAD_IWAD="../$WAD_PATH"                        \
         -D PRELOAD_CONFIG="../prboom-plus.cfg"                \
-        -D CMAKE_BUILD_TYPE="Release"                         \
+        -D CMAKE_BUILD_TYPE="$BUILD_FOR"                      \
+        -DSDL2_LIBRARY="${SDL2_LIBS}"                         \
+        -DSDL2_INCLUDE_DIR="${SDL2_CFLAGS}"
     emmake cmake --build .
-popd || exit 1aw
+popd || exit 1
+
+rm -Rf $tmpdir
