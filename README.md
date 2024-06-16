@@ -7,8 +7,8 @@ WebBoom is a [WebAssembly](https://webassembly.org/) port of Doom based on [PrBo
 ## Goals
 
 - Remain compatible with [upstream](https://github.com/coelckers/prboom-plus) by changing as little as possible in the codebase/build scripts, which enables WebBoom to:
-  + be compiled for desktop and WebAssembly targets
-  + incorporate changes made to the original PrBoom+ after this fork was created
+  - be compiled for desktop and WebAssembly targets
+  - incorporate changes made to the original PrBoom+ after this fork was created
 - Retain all singleplayer core features, including sound/music
 - Keep the git history intact and provide documentation on how to compile the project
 
@@ -20,8 +20,7 @@ This project uses Emscripten as its compiler toolchain. To install it, follow [t
 
 [CMake](https://cmake.org/download/) is needed to generate and run the build scripts, so go ahead and install that too.
 
-
-### Bulding `prboom-plus.wad` and prboom-plus for PC 
+### Bulding `prboom-plus.wad` and prboom-plus for PC
 
 To run prboom-plus (on desktop or web), you'll first need the `prboom-plus.wad` [PWAD](https://doomwiki.org/wiki/PWAD). It can be built off the `prboom2/data` directory on this repository using the CMake commands to compile a desktop build:
 
@@ -75,7 +74,6 @@ This will generate the following files: `index.html`, `index.js`, `index.wasm`, 
 
 If you run `python -m "http.server"` or any web server in that directory, you should be able to play Doom on your browser!
 
-
 #### Other notable CMake variables
 
 ``` sh
@@ -84,12 +82,15 @@ If you run `python -m "http.server"` or any web server in that directory, you sh
 -D EM_KEYBOARD_ELEMENT="\"doom\"" # DOM ID for the element that will capture mouse and keyboard events  
 -D ADDITIONAL_FLAGS=""  #  Any flag accepted by emcc in the linking stage
 ```
+
 For instance, these are the `ADDITIONAL_FLAGS` used in the [hosted](https://webboom.surge.sh) version:
+
 ```
  -D ADDITIONAL_FLAGS="-s MODULARIZE=1 -s EXPORT_NAME=prboom --shell-file='../emscripten/shell.html' -s INVOKE_RUN=0"
 ```
 
 See also:
+
 - [emcc reference](https://emscripten.org/docs/tools_reference/emcc.html)
 - [settings.js](https://emscripten.org/docs/api_reference/advanced-apis.html#settings-js)
 
@@ -99,9 +100,8 @@ Switching between `"Release"` and `"Debug"` in `CMAKE_BUILD_TYPE` affect some de
 
 | Type of release | Optimization | Output name | Output suffix | Other flags |
 | --------------- | ------------ | ----------- | ------------- | ----------- |
-| **Debug** | `-O0` (No optimization) | `index` | `.html` | `-gsource-maps --source-map-base /`. (Emit source maps. This will only work if the website is served from the `prboom2` directory) 
+| **Debug** | `-O0` (No optimization) | `index` | `.html` | `-gsource-maps --source-map-base /`. (Emit source maps. This will only work if the website is served from the `prboom2` directory)
 | **Release** | `-Oz` (Optimize the code with focus on size) | `prboom` | `.js` | None |
-
 
 ## Similar projects
 
